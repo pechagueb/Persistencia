@@ -69,7 +69,7 @@ public class Cliente {
 
 
         } catch (Exception e) {
-            //en caso de errorf devuelve texto
+            //en caso de error devuelve texto
             return "Cliente{id='%s', nombre='%s', email='%s'}";
         }
 
