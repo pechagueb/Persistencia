@@ -49,6 +49,54 @@ public class ClienteRepositoryJson {
     }
 
     // CRUD
+    // C - Create
+    public Cliente crear(Cliente nuevo) throws IOException{
+        List<Cliente> clientes = cargarTodo();
+        //Validar que no exista cliente con el mismo email
+        boolean existeEmail = clientes.stream().anyMatch(c -> c.getEmail().equalsIgnoreCase(nuevo.getEmail()));
+        if(existeEmail) throw new IllegalArgumentException("Ya existe un cliente con ese email.");
+        clientes.add(nuevo);
+        guardarTodo(clientes);
+        return nuevo;
+    }
+
+    // R - Read (uno)
+    public Optional<Cliente> buscarPorId(String id) throws IOException {
+        return cargarTodo().stream()
+                .filter( c -> Objects.equals(c.getId(), id))
+                .findFirst();
+    }
+
+    // R - Read (todos)
+    public List<Cliente> listar() throws IOException{
+        return Collections.unmodifiableList(cargarTodo());
+    }
+
+    // U - Update
+    public void actualizar(Cliente actualizado) throws IOException{
+        List<Cliente> clientes = cargarTodo();
+        boolean modificado = false;
+        for(int i = 0; i < clientes.size(); i++){
+            // compara los ids
+            if(Objects.equals(clientes.get(i).getId(), actualizado.getId())){
+                clientes.set(i, actualizado);
+                modificado = true;
+                break;
+            }
+        }
+        if(!modificado) throw new NoSuchElementException("Cliente no encontrado.");
+        guardarTodo(clientes);
+    }
+
+    // D - Delete: eliminar por id
+    public void eliminar(String id) throws IOException{
+        List<Cliente> clientes = cargarTodo();
+        boolean removed = clientes.removeIf(c -> Objects.equals(c.getId(), id));
+        if(!removed) throw new NoSuchElementException("Cliente no encontrado.");
+        guardarTodo(clientes);
+    }
+
+
 
     //Búsqueda simple
     public List<Cliente> buscarPorNombre(String texto) throws IOException{
