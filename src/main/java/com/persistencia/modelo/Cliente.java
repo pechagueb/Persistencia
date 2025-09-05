@@ -54,4 +54,25 @@ public class Cliente {
         return Objects.equals(id, c.id);
     }
 
+    @Override
+    public int hashCode(){return Objects.hash(id);}
+
+    @Override
+    public String toString(){
+
+        try{
+
+            //Creamos un ObjectMapper
+            return new com.fasterxml.jackson.databind.ObjectMapper()
+                .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(this);
+
+
+        } catch (Exception e) {
+            //en caso de errorf devuelve texto
+            return "Cliente{id='%s', nombre='%s', email='%s'}";
+        }
+
+    }
+
 }
